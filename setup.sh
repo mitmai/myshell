@@ -1,17 +1,16 @@
 #!/bin/sh
 INSTALL_PATH=$( cd $(dirname $0); pwd )
 # 0. check
-if [ -f $HOME/.bashrc ]; then
+
+if [ -f "$HOME/.bashrc" ] || [ -h "$HOME/.bashrc" ]; then
   echo "Please backup your bashrc before setup"
   exit 1
 fi
-
-if [ -f $HOME/.bash_aliases ]; then
+if [ -f "$HOME/.bash_aliases" ]  || [ -h "$HOME/.bash_aliases" ]; then
   echo "Please backup your bash alias script before setup"
   exit 1
 fi
-
-if [ -f $HOME/.bash_helper ]; then
+if [ -f "$HOME/.bash_aliases" ] || [ -h "$HOME/.bash_helper" ]; then
   echo "Please backup your bash helper script before setup"
   exit 1
 fi
