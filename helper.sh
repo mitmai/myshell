@@ -27,6 +27,16 @@
 #    fi
 #}
 
+# determine whether arrays are zero-based (bash) or one-based (zsh)
+_xarray=(a b c)
+if [ -z "${_xarray[${#_xarray[@]}]}" ]
+then
+    _arrayoffset=1
+else
+    _arrayoffset=0
+fi
+unset _xarray
+
 
 function jsgrep()
 {
@@ -54,14 +64,14 @@ function godir () {
         return
     fi
     T=`pwd`
-    if [[ ! -f $T/filelist ]]; then
+    if [[ ! -f filelist ]]; then
         echo -n "Creating index..."
-        (cd $T; find . -type f |grep -v ".svn" > filelist)
+        (find . -type f |grep -v ".svn" > filelist)
         echo " Done"
         echo ""
     fi
     local lines
-    lines=($(grep "$1" $T/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
+    lines=($(grep "$1" filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return
@@ -90,7 +100,7 @@ function godir () {
         # even though zsh arrays are 1-based, $foo[0] is an alias for $foo[1]
         pathname=${lines[0]}
     fi
-    cd $T/$pathname
+    cd $pathname
 }
 
 function gofile () {
