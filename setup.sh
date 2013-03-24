@@ -6,12 +6,12 @@ if [ -f $HOME/.bashrc ]; then
   exit 1
 fi
 
-if [ -d $HOME/.bash_aliases ]; then
+if [ -f $HOME/.bash_aliases ]; then
   echo "Please backup your bash alias script before setup"
   exit 1
 fi
 
-if [ -d $HOME/.bash_helper ]; then
+if [ -f $HOME/.bash_helper ]; then
   echo "Please backup your bash helper script before setup"
   exit 1
 fi
@@ -24,8 +24,8 @@ echo ""
 if [ -f $INSTALL_PATH/$USER.bashrc ]; then
   rm $INSTALL_PATH/$USER.bashrc
 fi
-cp $INSTALL_PATH/default.bashrc $INSTALL_PATH/$USER.bashrc
-ln -s $INSTALL_PATH/$USER.bashrc $HOME/.bashrc
+cp $INSTALL_PATH/default.bashrc $INSTALL_PATH/.bashrc
+ln -s $INSTALL_PATH/.bashrc $HOME/.bashrc
 ln -s $INSTALL_PATH/alias.sh $HOME/.bash_aliases
 ln -s $INSTALL_PATH/helper.sh $HOME/.bash_helper
 
