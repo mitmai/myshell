@@ -20,12 +20,11 @@ echo "Now, seting up your bash environment..."
 echo ""
 
 # 1. Everything is ok, let's link all necessary files
-if [ -f "$HOME/.bash_$USER" ] || [ -h "$HOME/.bash_$USER" ]; then
-  echo "Your personal shell already existed."
-else
-  touch $INSTALL_PATH/.bash_$USER
-  ln -s $INSTALL_PATH/.bash_$USER $HOME/.bash_$USER
+if [ ! -f "$INSTALL_PATH/mybashrc" ]; then
+  touch $INSTALL_PATH/mybashrc
 fi
+ln -s $INSTALL_PATH/mybashrc $HOME/.bash_$USER
+
 cp $INSTALL_PATH/default.bashrc $INSTALL_PATH/.bashrc
 ln -s $INSTALL_PATH/.bashrc $HOME/.bashrc
 ln -s $INSTALL_PATH/alias.sh $HOME/.bash_aliases
