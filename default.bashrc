@@ -64,7 +64,7 @@ if [ $platform = 'apple' ]; then
   export LSCOLORS='GxFxBxDxCxegedabagacad'
   alias ls='ls -GFh'
 elif [ $platform = 'linux' ]; then
-  export LS_COLORS='di=33:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=35:*.rpm=90'
+  export LS_COLORS='di=36:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=35:*.rpm=90'
   alias ls='ls --color=auto'
 fi
 
@@ -76,4 +76,9 @@ fi
 # Helper procedure
 if [ -f ~/.bash_helper ]; then
   . ~/.bash_helper
+fi
+
+# Personal bashrc
+if [ -f ~/.bash_$USER ]; then
+  . ~/.bash_$USER
 fi
