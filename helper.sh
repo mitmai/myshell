@@ -1,4 +1,4 @@
-#
+#!/bin/sh
 # Copyright (c) 2013, Three Ocean (to@bcloud.us). All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ function godir () {
     T=`pwd`
     if [[ ! -f filelist ]]; then
         echo -n "Creating index..."
-        (find . -type f |grep -v ".svn" > filelist)
+        (find . -type f |grep -v "\.svn" | grep -v "\.o" > filelist)
         echo " Done"
         echo ""
     fi
@@ -109,7 +109,7 @@ function gofile () {
     T=`pwd`
     if [[ ! -f $T/filelist ]]; then
         echo -n "Creating index..."
-        (cd $T; find . -type f |grep -v ".svn" > filelist)
+        (cd $T; find . -type f |grep -v "\.svn" |grep -v "\.o" > filelist)
         echo " Done"
         echo ""
     fi
@@ -155,7 +155,7 @@ function execfile () {
     T=`pwd`
     if [[ ! -f $T/filelist ]]; then
         echo -n "Creating index..."
-        (cd $T; find . -type f |grep -v ".svn" > filelist)
+        (cd $T; find . -type f |grep -v "\.svn" |grep -v "\.o" > filelist)
         echo " Done"
         echo ""
     fi
