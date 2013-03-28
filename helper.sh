@@ -1,31 +1,29 @@
-#function gettop
-#{
-#    local TOPFILE=build/core/envsetup.mk
-#    if [ -n "$TOP" -a -f "$TOP/$TOPFILE" ] ; then
-#        echo $TOP
-#    else
-#        if [ -f $TOPFILE ] ; then
-#            # The following circumlocution (repeated below as well) ensures
-#            # that we record the true directory name and not one that is
-#            # faked up with symlink names.
-#            PWD= /bin/pwd
-#        else
-#            # We redirect cd to /dev/null in case it's aliased to
-#            # a command that prints something as a side-effect
-#            # (like pushd)
-#            local HERE=$PWD
-#            T=
-#            while [ \( ! \( -f $TOPFILE \) \) -a \( $PWD != "/" \) ]; do
-#                cd .. > /dev/null
-#                T=`PWD= /bin/pwd`
-#            done
-#            cd $HERE > /dev/null
-#            if [ -f "$T/$TOPFILE" ]; then
-#                echo $T
-#            fi
-#        fi
-#    fi
-#}
+#
+# Copyright (c) 2013, Three Ocean (to@bcloud.us). All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of the <organization> nor the
+#       names of its contributors may be used to endorse or promote products
+#       derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
 
 # determine whether arrays are zero-based (bash) or one-based (zsh)
 _xarray=(a b c)
@@ -147,6 +145,52 @@ function gofile () {
         pathname=${lines[0]}
     fi
     vim $T/$pathname
+}
+
+function execfile () {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "Usage: execfile command <regex>"
+        return
+    fi
+    T=`pwd`
+    if [[ ! -f $T/filelist ]]; then
+        echo -n "Creating index..."
+        (cd $T; find . -type f |grep -v ".svn" > filelist)
+        echo " Done"
+        echo ""
+    fi
+    local lines
+#lines=($(grep "$1" $T/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
+    lines=($(grep "$2" $T/filelist | sort | uniq))
+    if [[ ${#lines[@]} = 0 ]]; then
+        echo "Not found"
+        return
+    fi
+    local pathname
+    local choice
+    if [[ ${#lines[@]} > 1 ]]; then
+        while [[ -z "$pathname" ]]; do
+            local index=1
+            local line
+            for line in ${lines[@]}; do
+                printf "%6s %s\n" "[$index]" $line
+                index=$(($index + 1))
+            done
+            echo
+            echo -n "Select one: "
+            unset choice
+            read choice
+            if [[ $choice -gt ${#lines[@]} || $choice -lt 1 ]]; then
+                echo "Invalid choice"
+                continue
+            fi
+            pathname=${lines[$(($choice-$_arrayoffset))]}
+        done
+    else
+        # even though zsh arrays are 1-based, $foo[0] is an alias for $foo[1]
+        pathname=${lines[0]}
+    fi
+    $1 $T/$pathname
 }
 
 
