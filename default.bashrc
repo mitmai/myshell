@@ -34,9 +34,6 @@ elif [ $os = 'Darwin' ]; then
   platform='apple'
 fi
 
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
 # color prompt
 if [ "$WINDOW" ]; then
   PS1='\033[01;32m\]\u@\h:\[\033[01;33m\]\w\[\033[00;36m\][W$WINDOW]\[\033[00m\]\$ '
@@ -55,13 +52,13 @@ elif [ $platform = 'linux' ]; then
 fi
 
 # Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
+if [ -f ~/.bash/aliases.bash ]; then
+  . ~/.bash/aliases.bash
 fi
 
 # Helper procedure
-if [ -f ~/.bash_helper ]; then
-  . ~/.bash_helper
+if [ -f ~/.bash/helper.bash ]; then
+  . ~/.bash/helper.bash
 fi
 
 # Personal bashrc
