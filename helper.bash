@@ -67,20 +67,37 @@ function hgrep()
     find . -type f \( -name '*.h' -o -name '*.hpp' \) -print0 | xargs -0 grep --color -n "$@"
 }
 
+fileindex=".filelist"
+function constrctfilelist() {
+    if [[ ! -f $fileindex ]]; then
+        echo -n "Creating index..."
+        (find . -type f |grep -v "\.svn" | grep -v "\.o" | grep -v "\.git" | grep -v "\.swp" > $fileindex)
+        echo " Done"
+        echo ""
+    fi
+}
+
+function destructfilelist() {
+    if [[ -f $fileindex ]]; then
+        echo -n "Delete file index..."
+        /bin/rm $fileindex
+        echo " Done"
+        echo ""
+    fi
+}
+
 function godir () {
     if [[ -z "$1" ]]; then
         echo "Usage: godir <regex>"
         return
     fi
     T=`pwd`
-    if [[ ! -f filelist ]]; then
-        echo -n "Creating index..."
-        (find . -type f |grep -v "\.svn" | grep -v "\.o" > filelist)
-        echo " Done"
-        echo ""
+    if [ ! -z "$2" ] && [ $2 = 'refresh' ]; then
+      destructfilelist
     fi
+    constrctfilelist
     local lines
-    lines=($(grep "$1" filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
+    lines=($(grep "$1" $fileindex | sed -e 's/\/[^/]*$//' | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return
@@ -118,15 +135,13 @@ function gofile () {
         return
     fi
     T=`pwd`
-    if [[ ! -f $T/filelist ]]; then
-        echo -n "Creating index..."
-        (cd $T; find . -type f |grep -v "\.svn" |grep -v "\.o" > filelist)
-        echo " Done"
-        echo ""
+    if [ ! -z "$2" ] && [ $2 = 'refresh' ]; then
+      destructfilelist
     fi
+    constrctfilelist
     local lines
 #lines=($(grep "$1" $T/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
-    lines=($(grep "$1" $T/filelist | sort | uniq))
+    lines=($(grep "$1" $T/$fileindex | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return
@@ -164,15 +179,10 @@ function execfile () {
         return
     fi
     T=`pwd`
-    if [[ ! -f $T/filelist ]]; then
-        echo -n "Creating index..."
-        (cd $T; find . -type f |grep -v "\.svn" |grep -v "\.o" > filelist)
-        echo " Done"
-        echo ""
-    fi
+    constrctfilelist
     local lines
 #lines=($(grep "$1" $T/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
-    lines=($(grep "$2" $T/filelist | sort | uniq))
+    lines=($(grep "$2" $T/$fileindex | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return
