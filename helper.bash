@@ -36,6 +36,15 @@ if [ -f ~/.bash/helper/git-completion.bash ]; then
   . ~/.bash/helper/git-completion.bash
 fi
 
+# dir bookmark
+# http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
+#
+if [ -f ~/.bash/helper/dir-bookmark.bash ]; then
+  . ~/.bash/helper/dir-bookmark.bash
+fi
+
+
+
 # determine whether arrays are zero-based (bash) or one-based (zsh)
 _xarray=(a b c)
 if [ -z "${_xarray[${#_xarray[@]}]}" ]
@@ -215,29 +224,4 @@ function execfile () {
 }
 
 
-export BOOKMARK_PATH=$HOME/.dirbookmarks
-if [ ! -d $BOOKMARK_PATH ]; then
-  mkdir $BOOKMARK_PATH
-fi
-function jump {
-  cd -P "$BOOKMARK_PATH/$1" 2>/dev/null || echo "No such mark: $1"
-}
-function mark {
-  mkdir -p "$BOOKMARK_PATH"; ln -s "$(pwd)" "$BOOKMARK_PATH/$1"
-}
-function unmark {
-  rm -i "$BOOKMARK_PATH/$1"
-}
-function marks {
-ls -l "$BOOKMARK_PATH" | sed 's/  / /g' | cut -d' ' -f9- | sed 's/ -/\t-/g' && echo
-}
-
-#_completemarks() {
-#  local curw=${COMP_WORDS[COMP_CWORD]}
-#  local wordlist=$(find $BOOKMARK_PATH -type l -printf "%f\n")
-#  COMPREPLY=($(compgen -W '${wordlist[@]}' -- "$curw"))
-#  return 0
-#}
-#
-#complete -F _completemarks jump unmark
 
