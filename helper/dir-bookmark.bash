@@ -9,7 +9,7 @@ function bj {
 function bm {
   mkdir -p "$BOOKMARK_PATH"; ln -s "$(pwd)" "$BOOKMARK_PATH/$1"
 }
-function ubm {
+function brm {
   rm -i "$BOOKMARK_PATH/$1"
 }
 function bl {
