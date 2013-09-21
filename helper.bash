@@ -43,6 +43,13 @@ if [ -f ~/.bash/helper/dir-bookmark.bash ]; then
   . ~/.bash/helper/dir-bookmark.bash
 fi
 
+# tmux completion
+#
+if [ -f ~/.bash/helper/comletion_tmux.bash ]; then
+  . ~/.bash/helper/comletion_tmux.bash
+fi
+
+
 
 
 # determine whether arrays are zero-based (bash) or one-based (zsh)
