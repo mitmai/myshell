@@ -57,6 +57,9 @@ elif [ $platform = 'linux' ]; then
   alias ls='ls --color=auto'
 fi
 
+# vi mode
+set -o vi
+
 # Alias definitions.
 if [ -f ~/.bash/aliases.bash ]; then
   . ~/.bash/aliases.bash
