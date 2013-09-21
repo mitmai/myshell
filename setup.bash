@@ -34,6 +34,9 @@ cp $INSTALL_PATH/default.bashrc $INSTALL_PATH/.bashrc
 ln -s $INSTALL_PATH $HOME/.bash
 ln -s $INSTALL_PATH/.bashrc $HOME/.bashrc
 
+cp $INSTALL_PATH/tmux.conf $INSTALL_PATH/.tmux.conf
+ln -s $INSTALL_PATH/.tmux.conf $HOME/.tmux.conf
+
 /bin/bash $HOME/.bashrc
 
 echo "Done. Enjoy it!"
