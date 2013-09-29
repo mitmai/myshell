@@ -1,0 +1,20 @@
+[color]
+  ui = auto
+[user]
+  name = Three Ocean
+  email = to@bcloud.us
+[core]
+  editor = /usr/bin/vim
+[difftool "sourcetree"]
+  cmd = /usr/bin/vimdiff \"$LOCAL\" \"$REMOTE\"
+  path =
+[mergetool "vimdiff"]
+  cmd = /usr/bin/vimdiff
+  trustExitCode = true
+[alias]
+  ci = commit
+  st = status
+  br = branch
+  co = checkout
+  tree = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
