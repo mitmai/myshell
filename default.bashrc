@@ -25,6 +25,42 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+shorten_path()
+{
+  x=${1}
+  len=${#x}
+  max_len=$2
+
+  if [ $len -gt $max_len ]
+  then
+    pos=()
+    for ((i=0;i<len;i++))
+    do
+    if [ "${x:i:1}" == "/" ]
+    then
+      pos=(${pos[@]} $i)
+    fi
+    done
+    pos=(${pos[@]} $len)
+    i=0
+    while [ $((len-pos[i])) -gt $((max_len-3)) ]
+    do
+      i=$((i+1))
+    done
+    if [ ${pos[i]} == 0 ]
+    then
+      echo ${x}
+    elif [ ${pos[i]} == $len ]
+    then
+      echo ...${x:((len-max_len+3))}
+    else
+      echo ...${x:pos[i]}
+    fi
+  else
+    echo ${x}
+  fi
+}
+
 # Check OS type
 platform='unknow'
 os=$(uname)
@@ -42,7 +78,8 @@ else
 #PS1='\[\033[01;32m\]\u@\h:\[\033[01;33m\]\w\[\033[00m\]\360\237\215\272  \[\033[00m\]'
     PS1='\[\033[01;32m\]\u@\h:\[\033[01;33m\]\w\[\033[00m\]\360\237\215\272  \[\033[00m\]'
   else
-    PS1='\[\033[01;32m\]\u@\h:\[\033[01;33m\]\w\[\033[00m\]\$ \[\033[00m\]'
+#    PS1='\[\033[01;32m\]\u@\h:\[\033[01;33m\]\w\[\033[00m\]\$ \[\033[00m\]'
+    PS1='\[\033[01;32m\]\u@\h:\[\033[01;33m\]$(shorten_path "${PWD}" 40)\[\033[00m\]\$ \[\033[00m\]'
   fi
 fi
 
@@ -74,3 +111,4 @@ fi
 if [ -f ~/.bash_$USER ]; then
   . ~/.bash_$USER
 fi
+#. ~/.nvm/nvm.sh
